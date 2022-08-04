@@ -2,6 +2,13 @@ from bs4 import BeautifulSoup as bsp
 from datetime import date
 import bs4
 import requests
+import os
+
+def clearConsole():
+    command = "clear"
+    if os.name in ("nt", "dos"):
+        command = "cls"
+    os.system(command)
 
 def write_to_file(page, rank_list, rank_number, anime_title, anime_score, anime_episodes, anime_airing, title_columns):
     mode = "w"
@@ -9,7 +16,7 @@ def write_to_file(page, rank_list, rank_number, anime_title, anime_score, anime_
         mode = "a"
     counter = 0
     today = date.today().strftime("%b-%d-%Y")
-    with open("myanimelist-top-anime-{}.csv".format(today), mode) as fp:
+    with open("anime/myanimelist-top-anime-{}.csv".format(today), mode) as fp:
         if page == 1:
             for t in title_columns:
                 if counter == len(title_columns) - 1:
@@ -59,8 +66,10 @@ def get_top_anime_list(page_count):
     write_to_file(page_count, rank_list, rank_number, anime_title, anime_score, anime_episodes, anime_airing, title_columns)
 
 if __name__ == '__main__':
+    clearConsole()
     index = 1
     while True:
         get_top_anime_list(index)
+        clearConsole()
         print(f"{(index) * 50} animes recorded...")
         index += 1
