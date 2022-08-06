@@ -6,28 +6,6 @@ import utils
 
 today = date.today().strftime("%b-%d-%Y")
 
-def write_to_file(page, rank_list, rank_number, manga_title, manga_score, manga_chaps, manga_published, title_columns):
-    mode = "w"
-    if page > 1:
-        mode = "a"
-    counter = 0
-    with open("manga/myanimelist-top-manga-{}.csv".format(today), mode) as fp:
-        if page == 1:
-            for t in title_columns:
-                if counter == len(title_columns) - 1:
-                    fp.write(t.text)
-                else:
-                    fp.write(t.text + ',')
-                counter += 1
-            fp.write('\n')
-        for i in range(len(rank_list)):
-            fp.write(rank_number[i] + ',')
-            fp.write(manga_title[i] + ',')
-            fp.write(manga_score[i] + ',' )
-            fp.write(manga_chaps[i] + ',')
-            fp.write(manga_published[i] + '\n')
-        fp.close()
-
 def get_top_manga_list(page_count):
     url = "https://myanimelist.net/topmanga.php"
     if page_count > 1:
@@ -46,19 +24,31 @@ def get_top_manga_list(page_count):
         exit()
 
     rank_list = table.find_all(class_="ranking-list")
-    rank_number = []
-    manga_title = []
-    manga_score = []
-    manga_chaps = []
-    manga_published = []
+    manga_list = []
     for r in rank_list:
-        rank_number.append(r.find(class_="rank ac").text.strip())
-        manga_title.append(r.find(class_="detail").find("h3").text.strip())
-        manga_score.append(r.find(class_="score").text.strip())
-        manga_chaps.append(r.find(class_="detail").find(class_="information").contents[0].text.strip())
-        manga_published.append(r.find(class_="detail").find(class_="information").contents[2].text.strip())
+        rank_number = r.find(class_="rank ac").text.strip()
+        manga_title = r.find(class_="detail").find("h3").text.strip()
+        manga_score = r.find(class_="score").text.strip()
+        manga_chaps = r.find(class_="detail").find(class_="information").contents[0].text.strip()
+        manga_published = r.find(class_="detail").find(class_="information").contents[2].text.strip()
+        manga_list.append("{},{},{},{},{}\n".format(rank_number, manga_title, manga_score, manga_chaps, manga_published))
 
-    write_to_file(page_count, rank_list, rank_number, manga_title, manga_score, manga_chaps, manga_published, title_columns)
+    mode = "w"
+    if page_count > 1:
+        mode = "a"
+    counter = 0
+    with open("manga/myanimelist-top-manga-{}.csv".format(today), mode) as fp:
+        if page_count == 1:
+            for t in title_columns:
+                if counter == len(title_columns) - 1:
+                    fp.write(t.text)
+                else:
+                    fp.write(t.text + ',')
+                counter += 1
+            fp.write('\n')
+        for i in range(len(rank_list)):
+            fp.write(manga_list[i])
+        fp.close()
 
 def start():
     utils.clearConsole()
