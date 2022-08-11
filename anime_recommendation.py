@@ -50,7 +50,7 @@ def get_rec(page_num):
 
 if __name__ == '__main__':
     utils.clearConsole()
-    for i in range(1,351):
+    for i in range(1,201):
         get_rec(i)
         utils.clearConsole()
         print("{} anime recommendations recorded...".format(i * 100))
