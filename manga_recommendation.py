@@ -19,7 +19,7 @@ def get_rec(page_num):
         except OSError:
             continue
         
-    page = r.content
+    page = response.content
 
     soup = bsp(page, 'html.parser')
 
