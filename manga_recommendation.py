@@ -11,7 +11,14 @@ def get_rec(page_num):
     if page_num > 1:
         url += "&show={}".format((page_num - 1) * 100)
         mode = "a"
-    r = requests.get(url)
+
+    response = None
+    while response is None:
+        try:
+            response = requests.get(url)
+        except OSError:
+            continue
+        
     page = r.content
 
     soup = bsp(page, 'html.parser')
@@ -48,10 +55,10 @@ def get_rec(page_num):
             fp.write(description_rec_arr[i] + "\n")
         fp.close()
 
-if __name__ == '__main__':
-    utils.clearConsole()
+def start():
+    utils.clear_console()
     for i in range(1,201):
         get_rec(i)
-        utils.clearConsole()
+        utils.clear_console()
         print("{} manga recommendations recorded...".format(i * 100))
         i += 1

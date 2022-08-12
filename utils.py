@@ -1,6 +1,7 @@
 import os
+import requests
 
-def clearConsole():
+def clear_console():
     command = "clear"
     if os.name in ("nt", "dos"):
         command = "cls"

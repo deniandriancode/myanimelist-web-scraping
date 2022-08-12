@@ -11,8 +11,14 @@ def get_top_anime_list(page_count):
     if page_count > 1:
         url = url + "?limit={}".format(50 * (page_count - 1))
 
-    r = requests.get(url)
-    page = r.content
+    response = None
+    while response is None:
+        try:
+            response = requests.get(url)
+        except OSError:
+            continue
+            
+    page = response.content
 
     soup = bsp(page, 'html.parser')
     try:
@@ -20,6 +26,7 @@ def get_top_anime_list(page_count):
         title_columns = table.find(class_="table-header").contents[:-2]
         title_columns.append(bs4.element.NavigableString("Episodes"))
         title_columns.append(bs4.element.NavigableString("Airing"))
+        title_columns.append(bs4.element.NavigableString("Link"))
     except AttributeError:
         exit()
 
@@ -31,7 +38,8 @@ def get_top_anime_list(page_count):
         anime_score = r.find(class_="score").text.strip()
         anime_episodes = r.find(class_="detail").find(class_="information").contents[0].text.strip()
         anime_airing = r.find(class_="detail").find(class_="information").contents[2].text.strip()
-        anime_list.append("{},{},{},{},{}\n".format(rank_number, anime_title, anime_score, anime_episodes, anime_airing))
+        anime_link = r.find(class_="detail").find(class_="anime_ranking_h3").find("a").get("href")
+        anime_list.append("{},{},{},{},{},{}\n".format(rank_number, anime_title, anime_score, anime_episodes, anime_airing, anime_link))
 
     mode = "w"
     if page_count > 1:
@@ -51,13 +59,11 @@ def get_top_anime_list(page_count):
         fp.close()
 
 def start():
-    utils.clearConsole()
+    utils.clear_console()
     index = 1
     while True:
         get_top_anime_list(index)
-        utils.clearConsole()
+        utils.clear_console()
         print(f"{(index) * 50} animes recorded...")
         index += 1
 
-if __name__ == '__main__':
-    start()
