@@ -1,6 +1,16 @@
-# TODO
+# **MyAnimeList Web Scraper**
+_______________________________________________
 
-- Make a proper README file
+## Description
+Data being scraped currently including  
+- anime ranks
+- manga ranks  
+- anime recommendations
+- manga recommendations  
+
+NOTE : delimiter used in recommendations is pipe character '`|`'  
+
+**TODO**
 - Scrape anime reviews
 - Scrape manga reviews
 - Scrape forums
