@@ -2,7 +2,11 @@ from bs4 import BeautifulSoup as bsp
 from datetime import datetime
 import requests
 import utils
+import logging
 
+logging.basicConfig(filename='myanimelist.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
+logging.debug('Get current time')
 today = datetime.now().strftime("%b-%d-%Y_%H:%M")
 
 def get_rec(page_num):
@@ -24,9 +28,11 @@ def get_rec(page_num):
     soup = bsp(page, 'html.parser')
 
     try:
+        logging.debug('Get recommendation pair')
         rec_content = soup.find(id="content")
         rec_pair = rec_content.find_all(class_="spaceit borderClass")
-    except:
+    except Exception:
+        logging.info('Cannot find recommendation pair')
         exit()
     title_columns = ["If You Like", "Then You Might Like", "Description"]
     rec_if_like_arr = []
@@ -62,3 +68,8 @@ def start():
         utils.clear_console()
         print("{} manga recommendations recorded...".format(i * 100))
         i += 1
+
+logging.debug('Main function START')
+if __name__ == '__main__':
+    start()
+logging.debug('Main function END')

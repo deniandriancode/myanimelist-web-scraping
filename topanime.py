@@ -53,7 +53,7 @@ def get_top_anime_list(page_count):
     if page_count > 1:
         mode = "a"
     counter = 0
-    with open("anime/myanimelist-top-anime-{}.csv".format(today), mode) as fp:
+    with open("rank/anime/myanimelist-top-anime-{}.csv".format(today), mode) as fp:
         if page_count == 1:
             for t in title_columns:
                 logging.debug('Start write the table header')
@@ -70,7 +70,7 @@ def get_top_anime_list(page_count):
             logging.debug('End write the rank list')
         fp.close()
 
-logging.debug('Start of main function')
+
 def start():
     utils.clear_console()
     index = 1
@@ -80,5 +80,8 @@ def start():
         print(f"{(index) * 50} animes recorded...")
         index += 1
 
+logging.debug('Start of main function')
+if __name__ == '__main__':
+    start()
 logging.debug('End of main function')
 

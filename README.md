@@ -7,13 +7,14 @@ Data being scraped currently including
 - manga ranks  
 - anime recommendations
 - manga recommendations  
+- anime reviews
+- manga reviews
 
-NOTE : delimiter used in recommendations is pipe character '`|`'  
+NOTE : delimiter used in recommendations and reviews is pipe character '`|`'  
 
 **TODO**
-- Scrape anime reviews
-- Scrape manga reviews
-- Scrape forums
-- Scrape news (per category)
 - Scrape anime detail
 - Scrape manga detail
+- Scrape forums
+- Scrape news (per category)
+

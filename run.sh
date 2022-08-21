@@ -12,5 +12,10 @@ if ! [[ -d venv ]]; then
 fi
 
 source venv/bin/activate
-python3 main.py
+python3 topanime.py
+python3 topmanga.py
+python3 anime_recommendation.py
+python3 manga_recommendtaion.py
+python3 anime_review.py
+python3 manga_review.py
 deactivate
