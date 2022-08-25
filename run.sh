@@ -11,6 +11,10 @@ if ! [[ -d venv ]]; then
     deactivate
 fi
 
+if [[ -f myanimelist.log ]]; then
+    rm myanimelist.log
+fi
+
 source venv/bin/activate
 python3 topanime.py
 python3 topmanga.py

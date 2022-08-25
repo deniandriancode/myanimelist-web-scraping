@@ -4,6 +4,7 @@ import bs4
 import requests
 import utils
 import logging
+import csv
 
 logging.basicConfig(filename='myanimelist.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -28,7 +29,9 @@ def get_top_manga_list(page_count):
     try:
         logging.debug('Create table header')
         table = soup.find("table")
-        title_columns = table.find(class_="table-header").contents[:-2]
+        title_columns = []
+        for item in table.find(class_="table-header").contents[:-2]:
+            title_columns.append(item.text)
         title_columns.append(bs4.element.NavigableString("Chapters/Volumes"))
         title_columns.append(bs4.element.NavigableString("Published"))
         title_columns.append(bs4.element.NavigableString("Link"))
@@ -46,29 +49,22 @@ def get_top_manga_list(page_count):
         manga_chaps = r.find(class_="detail").find(class_="information").contents[0].text.strip()
         manga_published = r.find(class_="detail").find(class_="information").contents[2].text.strip()
         manga_link = r.find(class_="detail").find(class_="manga_h3").find("a").get("href")
-        manga_list.append("{},{},{},{},{},{}\n".format(rank_number, manga_title, manga_score, manga_chaps, manga_published, manga_link))
-        logging.debug('End add the manga to the list'
+        manga_list.append([rank_number, manga_title, manga_score, manga_chaps, manga_published, manga_link])
+        logging.debug('End add the manga to the list')
 
     mode = "w"
     if page_count > 1:
         mode = "a"
     counter = 0
     with open("rank/manga/myanimelist-top-manga-{}.csv".format(today), mode) as fp:
+        writer = csv.writer(fp, delimiter='|')
         if page_count == 1:
-            for t in title_columns:
-                logging.debug('Start write the table header')
-                if counter == len(title_columns) - 1:
-                    fp.write(t.text)
-                else:
-                    fp.write(t.text + ',')
-                counter += 1
-                logging.debug('End write the table header')
-            fp.write('\n')
-        for i in range(len(rank_list)):
-            logging.debug('Start write the rank list')
-            fp.write(manga_list[i])
-            logging.debug('End write the rank list')
-        fp.close()
+            logging.debug('Start write the table header')
+            writer.writerow(title_columns)
+            logging.debug('End write the table header')
+        logging.debug('Start write the rank list')
+        writer.writerows(manga_list)
+        logging.debug('End write the rank list')
 
 
 
@@ -81,7 +77,7 @@ def start():
         print(f"{(index) * 50} mangas recorded...")
         index += 1
 
-logging.debug('Start of main function'
+logging.debug('Start of main function')
 if __name__ == '__main__':
     start()
-logging.debug('End of main function'
+logging.debug('End of main function')

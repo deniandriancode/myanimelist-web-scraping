@@ -3,6 +3,7 @@ from datetime import datetime
 import requests
 import utils
 import logging
+import csv
 
 logging.basicConfig(filename='myanimelist.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -17,11 +18,13 @@ def get_rec(page_num):
         mode = "a"
 
     response = None
+    logging.debug("Start getting the page")
     while response is None:
         try:
             response = requests.get(url)
         except OSError:
             continue
+    logging.debug("End getting the page")
         
     page = response.content
 
@@ -34,32 +37,30 @@ def get_rec(page_num):
     except Exception:
         logging.info('Cannot find recommendation pair')
         exit()
-    title_columns = ["If You Like", "Then You Might Like", "Description"]
-    rec_if_like_arr = []
-    rec_might_like_arr = []
-    description_rec_arr = []
+    title_columns = ["If You Like", "Then You Might Like", "Description", "User", "User Link"]
+    manga_recommendation = []
 
+    logging.debug("Start extracting manga recommendation")
     for i in range(len(rec_pair)):
         rec_pair_table = rec_pair[i].find("table")
-        rec_if_like_arr.append(rec_pair_table.find_all("td")[0].find_all("a")[1].text)
-        rec_might_like_arr.append(rec_pair_table.find_all("td")[1].find_all("a")[1].text)
-        description_rec_arr.append(rec_pair_table.parent.find(class_="recommendations-user-recs-text").text.strip().replace("\r", " ").replace("\n", " "))
-
+        rec_if_like = rec_pair_table.find_all("td")[0].find_all("a")[1].text
+        rec_might_like = rec_pair_table.find_all("td")[1].find_all("a")[1].text
+        description_rec = rec_pair_table.parent.find(class_="recommendations-user-recs-text").text.strip().replace("\r", " ").replace("\n", " ")
+        mal_user = rec_pair[i].find(class_="lightLink spaceit").find_all("a")[1].text
+        mal_user_link = "https://myanimelist.net" + rec_pair[i].find(class_="lightLink spaceit").find_all("a")[1].get("href")
+        manga_recommendation.append([rec_if_like, rec_might_like, description_rec, mal_user, mal_user_link])
+    logging.debug("End extracting manga recommendation")
 
     with open("recommendation/manga/myanimelist-manga-recommendation-{}.csv".format(today), mode) as fp:
+        writer = csv.writer(fp, delimiter='|')
         if mode == "w":
-            counter = 0
-            for title in title_columns:
-                if counter < len(title_columns) - 1:
-                    fp.write(title + "|")
-                    counter += 1
-                else:
-                    fp.write(title + "\n")
-        for i in range(len(rec_pair)):
-            fp.write(rec_if_like_arr[i] + "|")
-            fp.write(rec_might_like_arr[i] + "|")
-            fp.write(description_rec_arr[i] + "\n")
-        fp.close()
+            logging.debug("Start write table header")
+            writer.writerow(title_columns)
+            logging.debug("End write table header")
+
+        logging.debug("Start write table rows")
+        writer.writerows(manga_recommendation)
+        logging.debug("End write table rows")
 
 def start():
     utils.clear_console()
@@ -73,3 +74,5 @@ logging.debug('Main function START')
 if __name__ == '__main__':
     start()
 logging.debug('Main function END')
+
+# add reviewer name and link
