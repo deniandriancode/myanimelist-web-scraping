@@ -1,5 +1,5 @@
-# **MyAnimeList Web Scraper**
-_______________________________________________
+# **MyAnimeList Web Scraper**  
+___
 
 ## Description
 Data being scraped currently including  
@@ -10,7 +10,7 @@ Data being scraped currently including
 - anime reviews
 - manga reviews
 
-NOTE : All the previous documents has been moved to (4shared)[https://www.4shared.com/folder/r5zcNLDN/myanimelist-web-scraping-archi.html], delimiter used in all documents is pipe character '`|`'  
+NOTE : All the previous documents has been moved to [4shared](https://www.4shared.com/folder/r5zcNLDN/myanimelist-web-scraping-archi.html), delimiter used in all documents is pipe character '`|`'  
 
 **TODO**
 - Add comments
