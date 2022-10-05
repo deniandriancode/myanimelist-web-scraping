@@ -20,3 +20,10 @@ jobs:
       - name: Run Python code
         run: |
           python animelink.py
+      - name: Upload file result
+        uses: actions/upload-artifact@v3
+        with:
+          name: animelink.csv
+          path: animelink.csv
+        if: ${{ always() }}
+
