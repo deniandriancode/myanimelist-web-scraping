@@ -21,7 +21,7 @@ def get_anime_link(page_count):
         try:
                 table = soup.find("table")
         except AttributeError:
-                exit()
+                return
 
         rank_list = table.find_all(class_="ranking-list")
         link_list = []
