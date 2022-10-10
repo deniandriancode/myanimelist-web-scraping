@@ -27,7 +27,10 @@ def get_detail(page):
         studio = main_content.find(class_="information studio author")
         studio_text = studio.text
         studio_link = f'{base_url}{studio.find("a").get("href")}'
-        broadcast = [i for i in main_content.find(class_="leftside").find_all(class_="spaceit_pad") if "Broadcast:" in i.text][0].find("span").next_sibling.strip()
+        try:
+                broadcast = [i for i in main_content.find(class_="leftside").find_all(class_="spaceit_pad") if "Broadcast:" in i.text][0].find("span").next_sibling.strip()
+        except Exception:
+                broadcast = "-"
         producers = [i for i in main_content.find(class_="leftside").find_all(class_="spaceit_pad") if "Producers:" in i.text][0].find_all("a")
         producers = str([i.text for i in producers])
         licensors = [i for i in main_content.find(class_="leftside").find_all(class_="spaceit_pad") if "Licensors:" in i.text][0].find_all("a")
