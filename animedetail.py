@@ -42,8 +42,11 @@ def get_detail(page):
         source = [i for i in main_content.find(class_="leftside").find_all(class_="spaceit_pad") if "Source:" in i.text][0].find("span").next_sibling.strip()
         genres = [i for i in main_content.find(class_="leftside").find_all(class_="spaceit_pad") if "Genres:" in i.text or "Genre:" in i.text][0].find_all("a")
         genres = str([i.text for i in genres])
-        themes = [i for i in main_content.find(class_="leftside").find_all(class_="spaceit_pad") if "Themes:" in i.text or "Theme:" in i.text][0].find_all("a")
-        themes = [i.text for i in themes]
+        try:
+                themes = [i for i in main_content.find(class_="leftside").find_all(class_="spaceit_pad") if "Themes:" in i.text or "Theme:" in i.text][0].find_all("a")
+                themes = [i.text for i in themes]
+        except Exception:
+                themes = "-"
         if len(themes) == 1:
             themes = themes[0]
         else:
